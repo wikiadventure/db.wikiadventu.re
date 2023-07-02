@@ -6,17 +6,10 @@ import { ory } from "../ory/api.ts";
 import { Session } from "https://deno.land/x/sacramentix_ory_client@v.1.1.39/index.ts";
 
 export async function guardOrySession(c:Context) {
-    const ory_session_cookie = Object.entries(c.req.cookie()).find(([k,v])=>k.startsWith("ory_session"));
-    const cookie = c.req.headers.get("cookie")!;
-    // c.req.headers.append("X-Session-Token", undefined as unknown as string)
-    const h = {
-        // "X-Session-Token": undefined as unknown as string,
-        ...c.req.headers,
-    }
-
+    const ory_session_cookie = Object.entries(c.req.cookie()??{}).find(([k,v])=>k.startsWith("ory_session"));
     if (ory_session_cookie == null) throw new HTTPException(401, { message: "The user is not authenticated" });
     const ory_session:Session = await fetch(env.ORY_BASE_PATH+"/sessions/whoami",{
-            headers: h,
+            headers: c.req.headers,
         })
         .then(r=>r.json())
         .catch(e=>{throw new HTTPException(401, { message: "Could not validate the ory session" })});
