@@ -1,16 +1,19 @@
-import { OryJwt } from "../../guard/oryJwt.ts";
+import type { OryUser } from "../../guard/orySession.ts";
 import { db } from "../db.ts";
 
-export async function achieve(token:OryJwt, achievement:string) {
+export async function achieve(user:OryUser, achievement:string) {
     const queryResult = await db.query<[never,AchieveError|{}]>(/* surrealql */`
-        LET $achieve = (SELECT * FROM achieve WHERE in = user:⟨${token.sid}⟩ && out = achievement:⟨${achievement}⟩)[0];
-        RETURN IF $achieve IS NONE THEN {
-            RETURN RELATE user:⟨${token.sid}⟩->achieve->achievement:⟨${achievement}⟩;
+        LET $achieve = (SELECT * FROM achieve WHERE in = user:⟨$id⟩ && out = achievement:⟨$achievement⟩)[0];
+        RETURN IF $achieve 
+        IS NONE THEN {
+            RETURN RELATE user:⟨$id⟩->achieve->achievement:⟨$achievement⟩;
         } ELSE {
             RETURN { error: "Achievement already achieve." };
         } END;
         
-    `);
+    `,
+    { id: user.id, achievement }
+    );
     return queryResult[1];
 }
 

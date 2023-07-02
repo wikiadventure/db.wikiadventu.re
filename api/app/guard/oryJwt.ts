@@ -26,7 +26,6 @@ export async function guardOryJwt(c:Context) {
 
     return await verify(jwt, cryptoKey)
         .catch(e=>{
-            console.log({error: e})
-            throw new HTTPException(401, { message: "The jwt provided in Authorization bearer header is invalid." 
-        })}) as OryJwt;
+            throw new HTTPException(401, { message: "The jwt provided in Authorization bearer header is invalid." })
+        }) as OryJwt;
 }

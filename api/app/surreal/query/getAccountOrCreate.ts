@@ -1,17 +1,19 @@
-import { OryJwt } from "../../guard/oryJwt.ts";
+import type { OryUser } from "../../guard/orySession.ts";
 import { db } from "../db.ts";
 
-export async function getAccountOrCreate(token:OryJwt) {
+export async function getAccountOrCreate(user:OryUser) {
     const queryResult = await db.query<[never, SurrealAccount]>(/* surrealql */`
-        LET $account = (SELECT * FROM user:⟨${token.sid}⟩)[0];
+        LET $account = (SELECT * FROM user:⟨$id⟩)[0];
         RETURN IF $account = NONE THEN {
-            RETURN CREATE user CONTENT { name: "${token.username}", id: "${token.sid}", email: "${token.email}" };
+            RETURN CREATE user CONTENT { name: $name, id: id, email: $email };
         }
         ELSE {
             RETURN $account;
         }
         END;
-    `);
+    `,
+    user
+    );
     return queryResult[1].result;
 }
 

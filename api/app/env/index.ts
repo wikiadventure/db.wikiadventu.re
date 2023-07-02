@@ -5,6 +5,8 @@ const envSchema = z.object({
     SURREAL_URL:        z.string().url(),
     SURREAL_USER:       z.string().min(1),
     SURREAL_PASSWORD:   z.string().min(1),
+    ORY_BASE_PATH:      z.string().url(),
+    // ORY_ACCESS_TOKEN:   z.string().min(1),
     ORY_JWT:            z.string()
                             .transform(zStringToJson)
                             .pipe(z.object({
