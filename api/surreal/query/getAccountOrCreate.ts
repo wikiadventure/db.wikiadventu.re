@@ -17,7 +17,7 @@ export async function getAccountOrCreate(user:OryUser) {
         uid: `user:⟨${user.id}⟩`
     }
     )
-    return queryResult[1].result;
+    return queryResult[1].result[0];
 }
 
 export type SurrealAccount = {
