@@ -8,7 +8,7 @@ import { guardOrySession } from "./guard/orySession.ts";
 const app = new Hono();
 
 app.use("/*", cors({
-    origin: "*",
+    origin: (origin) => origin,
     allowMethods: ['GET', 'HEAD', 'PUT', 'POST', 'DELETE', 'PATCH', 'OPTIONS'],
     allowHeaders: ["cookie"],
     credentials: true
