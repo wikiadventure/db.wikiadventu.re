@@ -1,6 +1,6 @@
 import { verify } from "https://deno.land/x/djwt@v2.8/mod.ts";
-import { HTTPException } from "https://deno.land/x/hono@v3.1.8/http-exception.ts";
-import type { Context } from "https://deno.land/x/hono@v3.1.8/mod.ts";
+import { HTTPException } from "https://deno.land/x/hono@v3.3.1/http-exception.ts";
+import type { Context } from "https://deno.land/x/hono@v3.3.1/mod.ts";
 import { env } from "../env/index.ts";
 import { ory } from "../ory/api.ts";
 import { Session } from "https://deno.land/x/sacramentix_ory_client@v.1.1.39/index.ts";

@@ -1,6 +1,6 @@
 import { verify } from "https://deno.land/x/djwt@v2.8/mod.ts";
-import { HTTPException } from "https://deno.land/x/hono@v3.1.8/http-exception.ts";
-import type { Context } from "https://deno.land/x/hono@v3.1.8/mod.ts";
+import { HTTPException } from "https://deno.land/x/hono@v3.3.1/http-exception.ts";
+import type { Context } from "https://deno.land/x/hono@v3.3.1/mod.ts";
 import { env } from "../env/index.ts";
 
 const cryptoKey = await crypto.subtle.importKey("jwk",env.ORY_JWT, { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256'},false,["verify"]);

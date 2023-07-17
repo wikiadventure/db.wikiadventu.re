@@ -53,10 +53,10 @@ export declare const ZodParsedType: {
     function: "function";
     map: "map";
     set: "set";
+    date: "date";
     nan: "nan";
     integer: "integer";
     float: "float";
-    date: "date";
     null: "null";
     array: "array";
     unknown: "unknown";
