@@ -1,4 +1,6 @@
 .env
 /api/surreal/local
 /types
-/scripts
+/npm/node_modules
+/npm/src
+/npm/.npmignore
