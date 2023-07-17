@@ -12,7 +12,6 @@ await build({
   typeCheck: false,
   shims: {
     deno: true,
-    undici: true,
     webSocket: true,
     blob: true,
     crypto: true,  
