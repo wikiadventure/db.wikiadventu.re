@@ -13,6 +13,7 @@ await build({
   shims: {
     deno: true,
     webSocket: true,
+    undici: true,
     blob: true,
     crypto: true,  
   },
