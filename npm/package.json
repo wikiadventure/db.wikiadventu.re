@@ -1,7 +1,7 @@
 {
   "module": "./esm/client/type.js",
   "types": "./types/client/type.d.ts",
-  "name": "@db-wikiadventu-re",
+  "name": "db-wikiadventu-re",
   "description": "The type for db.wikiadventu.re that can be used with hono/client",
   "license": "MIT",
   "repository": {

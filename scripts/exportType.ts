@@ -18,7 +18,7 @@ await build({
     crypto: true,  
   },
   package: {
-    name: "@db-wikiadventu-re",
+    name: "db-wikiadventu-re",
     version: Deno.args[0],
     description: "The type for db.wikiadventu.re that can be used with hono/client",
     license: "MIT",
