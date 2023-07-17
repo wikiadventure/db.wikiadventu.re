@@ -11,11 +11,6 @@ await build({
   declaration: "separate",
   typeCheck: false,
   shims: {
-    deno: true,
-    webSocket: true,
-    undici: true,
-    blob: true,
-    crypto: true,  
   },
   package: {
     name: "db-wikiadventu-re",
