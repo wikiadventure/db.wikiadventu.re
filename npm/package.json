@@ -1,6 +1,6 @@
 {
-  "module": "./esm/client/type.js",
-  "types": "./types/client/type.d.ts",
+  "module": "./esm/client/index.js",
+  "types": "./types/client/index.d.ts",
   "name": "db-wikiadventu-re",
   "description": "The type for db.wikiadventu.re that can be used with hono/client",
   "license": "MIT",
@@ -14,23 +14,15 @@
   "exports": {
     ".": {
       "import": {
-        "types": "./types/client/type.d.ts",
-        "default": "./esm/client/type.js"
+        "types": "./types/client/index.d.ts",
+        "default": "./esm/client/index.js"
       }
     }
   },
   "scripts": {
     "test": "node test_runner.js"
   },
-  "dependencies": {
-    "@deno/shim-deno": "~0.16.1",
-    "@deno/shim-crypto": "~0.3.1",
-    "undici": "^5.21.0",
-    "ws": "^8.13.0"
-  },
   "devDependencies": {
-    "@types/node": "^18.11.9",
-    "picocolors": "^1.0.0",
-    "@types/ws": "^8.5.4"
+    "picocolors": "^1.0.0"
   }
 }

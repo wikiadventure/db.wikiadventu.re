@@ -27,5 +27,5 @@ export declare const env: Readonly<z.objectOutputType<{
         kty: "RSA";
         kid: string;
     }>>;
-}, z.ZodString, "strip">>;
+}, z.ZodString, "strip"> | undefined>;
 export declare function zStringToJson(str: string, ctx: z.RefinementCtx): any;

@@ -52,7 +52,6 @@ export declare const ZodParsedType: {
     object: "object";
     function: "function";
     map: "map";
-    set: "set";
     date: "date";
     nan: "nan";
     integer: "integer";
@@ -63,6 +62,7 @@ export declare const ZodParsedType: {
     promise: "promise";
     void: "void";
     never: "never";
+    set: "set";
 };
 export type ZodParsedType = keyof typeof ZodParsedType;
 export declare const getParsedType: (data: any) => ZodParsedType;
