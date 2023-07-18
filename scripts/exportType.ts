@@ -11,6 +11,7 @@ await build({
   declaration: "separate",
   typeCheck: false,
   shims: {
+    undici: true
   },
   package: {
     name: "db-wikiadventu-re",

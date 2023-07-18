@@ -5,4 +5,4 @@ export type ServeStaticOptions = {
     path?: string;
     rewriteRequestPath?: (path: string) => string;
 };
-export declare const serveStatic: (options?: ServeStaticOptions) => (c: Context, next: Next) => Promise<any>;
+export declare const serveStatic: (options?: ServeStaticOptions) => (c: Context, next: Next) => Promise<import("undici").Response | undefined>;
