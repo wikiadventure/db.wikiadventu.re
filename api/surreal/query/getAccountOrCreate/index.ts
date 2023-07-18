@@ -8,7 +8,7 @@ export async function getAccount(user:OryUser) {
     `,
         user
     )
-    return queryResult[1].result;
+    return queryResult[1].result!;
 }
 
 export type Account = {

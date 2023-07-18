@@ -13,7 +13,7 @@ export async function getSixDegreeAccount(user:OryUser, lang:Lang) {
     `,
         user
     )
-    return queryResult[3].result;
+    return queryResult[3].result!;
 }
 
 export type SixDegreeAccount = Account & {
