@@ -6,13 +6,13 @@ import { six_degree_achievements_creation_query } from "./sixdegree/Achievement.
 const publicKey = jwkToPem(env.ORY_JWT);
 
 await db.query(/* surrealql */`
-    -- REMOVE TABLE user;
-    -- REMOVE TABLE achievement_difficulty;
-    -- REMOVE TABLE game_tag;
-    -- REMOVE TABLE achieve;
-    -- REMOVE TABLE achievement;
-    -- REMOVE TABLE achievement_content;
-    -- REMOVE TABLE lang;
+    REMOVE TABLE user;
+    REMOVE TABLE achievement_difficulty;
+    REMOVE TABLE game_tag;
+    REMOVE TABLE achieve;
+    REMOVE TABLE achievement;
+    REMOVE TABLE achievement_content;
+    REMOVE TABLE lang;
 
     -- -- game_tag to describe all game and make relation -- --
 
@@ -40,18 +40,16 @@ await db.query(/* surrealql */`
     -- -- user TABLE & game specific data -- --
 
     DEFINE TABLE user SCHEMAFULL PERMISSIONS FOR select WHERE true;
-
-        DEFINE FIELD id    ON TABLE user TYPE string;
         DEFINE FIELD name  ON TABLE user TYPE string;
             DEFINE INDEX nameIndex ON TABLE user COLUMNS name UNIQUE;
         DEFINE FIELD email ON TABLE user TYPE string ASSERT is::email($value) PERMISSIONS FOR select WHERE false;
 
         -- -- six_degree data -- --
 
-        DEFINE FIELD six_degree                     ON TABLE user TYPE object;
-            DEFINE FIELD six_degree.highest_degree      ON TABLE user TYPE int;
-            DEFINE FIELD six_degree.query_count         ON TABLE user TYPE int VALUE $value OR 0;
-            DEFINE FIELD six_degree.highest_path_count  ON TABLE user TYPE int;
+        DEFINE FIELD six_degree                     ON TABLE user TYPE object VALUE $value ?? {};
+            -- DEFINE FIELD six_degree.highest_degree      ON TABLE user TYPE int;
+            DEFINE FIELD six_degree.query_count         ON TABLE user TYPE int VALUE $value ?? 0;
+            -- DEFINE FIELD six_degree.highest_path_count  ON TABLE user TYPE int;
 
     -- -- achievement_difficulty we can use to filter achievement -- --
 
@@ -119,19 +117,17 @@ await db.query(/* surrealql */`
     -- Create an account if it doesn't exist or update it otherwise
     -- return the account
     DEFINE FUNCTION fn::getUserOrCreate(
-        $uid: record(user),
+        $id: string,
         $name: string,
         $email: string
     ) {
-        RETURN IF (SELECT * FROM $uid)[0] == null THEN {
-            RETURN (CREATE $uid CONTENT { name: $name, email: $email, six_degree: { } })[0];
-        } ELSE {
-            RETURN (UPDATE $uid CONTENT { name: $name, email: $email })[0];
-        } END;
+        RETURN (INSERT INTO user [{ id: type::thing("user", $id) , name: $name , email: $email }] ON DUPLICATE KEY UPDATE name = $name, email = $email)[0];
     };
 
     -- -- Add all six_degree achievement -- --
 
     ${six_degree_achievements_creation_query}
 
-`).then(console.log)        
+`).then(console.log)
+
+// -- ${six_degree_achievements_creation_query}

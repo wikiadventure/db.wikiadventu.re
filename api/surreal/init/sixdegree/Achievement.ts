@@ -68,4 +68,4 @@ RELATE achievement:Over9000->achievement_content->lang:fr CONTENT {
 `;
 
 
-await db.query(six_degree_achievements_creation_query).then(console.log);
+// await db.query(six_degree_achievements_creation_query).then(console.log);

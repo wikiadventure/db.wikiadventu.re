@@ -37,8 +37,4 @@ const port = 9009;
 serve(app.fetch, { port: port});
 
 export type AppType = typeof route;
-
-
-const client = hc<AppType>("");
-
-client["get-account"]["six-degree"].$get()
+ 

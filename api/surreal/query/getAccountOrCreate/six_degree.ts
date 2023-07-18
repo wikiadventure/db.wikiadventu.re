@@ -5,15 +5,15 @@ import { Account } from "./index.ts";
 
 export async function getSixDegreeAccount(user:OryUser, lang:Lang) {
     const langFallback = lang == "en" ? `[lang:en]` : `[lang:${lang},lang:en]`;
-    const queryResult:any = await db.query<[never, SixDegreeAccount]>(/* surrealql */`
-        LET $user = fn::getUserOrCreate( type::thing("user", $id) , $name , $email );
+    const queryResult = await db.query<[never, never, never, SixDegreeAccount]>(/* surrealql */`
+        LET $user = fn::getUserOrCreate( $id , $name , $email );
         LET $all_achievement = SELECT VALUE fn::langFallback(->achievement_content, ${langFallback}) FROM achievement WHERE game_tag == game_tag:six_degree;
         LET $user_achievement = SELECT title, description, meta::id(out) as lang, meta::id(in) as id, (SELECT VALUE date FROM $uid->achieve WHERE out = $parent.in)[0] as achieved FROM $all_achievement;
-        RETURN SELECT meta::id(id) as id, name, email, $user_achievement as six_degree.achievements FROM $user;
+        RETURN (SELECT meta::id(id) as id, name, email, six_degree, $user_achievement as six_degree.achievements FROM $user)[0];
     `,
         user
     )
-    return queryResult[1].result[0];
+    return queryResult[3].result;
 }
 
 export type SixDegreeAccount = Account & {
