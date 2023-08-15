@@ -1,5 +1,6 @@
 .env
-/api/surreal/local
+/local
+/npm
 /types
 /npm/node_modules
 /npm/src
