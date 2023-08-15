@@ -10,8 +10,21 @@ await build({
   scriptModule: false,
   declaration: "separate",
   typeCheck: false,
+  compilerOptions: {
+    target: "Latest",
+    lib: ["ESNext"],
+  },
   shims: {
-    undici: true
+    undici: true,
+    crypto: true,
+    deno: true,
+    custom: [{
+      package: {
+        name: "stream/web",
+      },
+      globalNames: ["ReadableStream", "TransformStream"],
+    }]
+
   },
   package: {
     name: "db-wikiadventu-re",
