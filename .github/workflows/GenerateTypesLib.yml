@@ -36,12 +36,12 @@ jobs:
       - name: Generate with DNT
         run: deno run --allow-all scripts/exportType.ts
 
-      - name: Push directory to another repository
       - name: Delete unwanted file
         run: rm -rf npm/node_modules npm/src
   # You may pin to the exact commit or the version.
   # uses: cpina/github-action-push-to-another-repository@07c4d7b3def0a8ebe788a8f2c843a4e1de4f6900
-      - uses: cpina/github-action-push-to-another-repository@v1.7.2
+      - name: Push directory to another repository
+        uses: cpina/github-action-push-to-another-repository@v1.7.2
         env:
           API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
         with:
