@@ -37,7 +37,7 @@ jobs:
       #   run: deno fmt --check
 
       - name: Generate with DNT
-        run: deno run scripts/exportType.ts
+        run: deno run --allow-all scripts/exportType.ts
 
       - name: Push directory to another repository
       - name: Delete unwanted file
