@@ -1,4 +1,4 @@
-import { HonoRequest } from "https://deno.land/x/hono@v3.3.1/mod.ts";
+import { HonoRequest } from "npm:hono";
 
 export const supportedLang = [
     "en",
@@ -7,7 +7,7 @@ export const supportedLang = [
 
 export type Lang = typeof supportedLang[number];
 
-export function getLangFromHeaders(req:HonoRequest<any,{}>):Lang {
+export function getLangFromHeaders(req:HonoRequest):Lang {
     const langHeaders = req.headers.get("Accept-Language");
     return supportedLang.includes(langHeaders as any) ? langHeaders as Lang : "en";
 }
