@@ -1,7 +1,7 @@
-import { Hono } from 'npm:hono';
-import { cors } from 'npm:hono/cors';
-import { z } from "npm:zod";
-import { zValidator } from "npm:@hono/zod-validator";
+import { Hono, hc } from "https://deno.land/x/hono@v3.3.1/mod.ts";
+import { cors } from "https://deno.land/x/hono@v3.3.1/middleware.ts";
+import { z } from "https://deno.land/x/zod@v3.21.4/mod.ts";
+import { zValidator } from "https://esm.sh/@hono/zod-validator@0.1.8";
 import { serve } from "https://deno.land/std@0.182.0/http/server.ts";
 import { getAccount } from "./surreal/query/getAccountOrCreate/index.ts";
 import { getSixDegreeAccount, six_degree_achivements_id } from "./surreal/query/getAccountOrCreate/six_degree.ts";
