@@ -1,6 +1,6 @@
 import { env } from "../../env/index.ts";
 import { db } from "../db.ts";
-import jwkToPem from "npm:jwk-to-pem@latest";
+import jwkToPem from "https://esm.sh/jwk-to-pem@2.0.5";
 import { six_degree_achievements_creation_query } from "./sixdegree/Achievement.ts";
 
 const publicKey = jwkToPem(env.ORY_JWT);
