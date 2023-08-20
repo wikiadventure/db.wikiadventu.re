@@ -7,7 +7,7 @@ export const supportedLang = [
 
 export type Lang = typeof supportedLang[number];
 
-export function getLangFromHeaders(req:HonoRequest):Lang {
+export function getLangFromHeaders(req:HonoRequest<any,any>):Lang {
     const langHeaders = req.headers.get("Accept-Language");
     return supportedLang.includes(langHeaders as any) ? langHeaders as Lang : "en";
 }

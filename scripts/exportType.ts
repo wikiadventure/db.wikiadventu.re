@@ -10,7 +10,7 @@ await build({
   scriptModule: false,
   declaration: "separate",
   typeCheck: false,
-
+  skipSourceOutput: true,
   shims: {
     undici: true,
     crypto: true,

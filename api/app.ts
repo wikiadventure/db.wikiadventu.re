@@ -1,6 +1,6 @@
 import { Hono, hc } from "https://deno.land/x/hono@v3.3.1/mod.ts";
 import { cors } from "https://deno.land/x/hono@v3.3.1/middleware.ts";
-import { z } from "https://deno.land/x/zod@v3.21.4/mod.ts";
+import { z } from "https://esm.sh/zod@3.22.2";
 import { zValidator } from "https://esm.sh/@hono/zod-validator@0.1.8";
 import { serve } from "https://deno.land/std@0.182.0/http/server.ts";
 import { getAccount } from "./surreal/query/getAccountOrCreate/index.ts";
@@ -18,6 +18,7 @@ app.use("/*", cors({
     credentials: true
 }));
 
+
 const route =
 app
 .get('/get-account', async c => {   
@@ -30,7 +31,7 @@ app
 })
 .post("/achieve/:achievement" , zValidator('param', z.object({
     achievement: z.enum(six_degree_achivements_id)
-})), async c => {
+})) as any, async c => {
     const { achievement } = await c.req.param();
     const { user } = await guardOrySession(c);
     return c.jsonT(await achieve(user, achievement));
