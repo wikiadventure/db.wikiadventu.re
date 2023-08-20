@@ -10,10 +10,7 @@ await build({
   scriptModule: false,
   declaration: "separate",
   typeCheck: false,
-  compilerOptions: {
-    target: "Latest",
-    lib: ["ESNext"],
-  },
+
   shims: {
     undici: true,
     crypto: true,
