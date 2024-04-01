@@ -1,22 +1,22 @@
-import { verify } from "https://deno.land/x/djwt@v2.8/mod.ts";
-import { HTTPException } from "https://deno.land/x/hono@v3.3.1/http-exception.ts";
-import type { Context } from "https://deno.land/x/hono@v3.3.1/mod.ts";
-import { getCookie } from "https://deno.land/x/hono@v3.3.1/middleware.ts";
-import { env } from "../env/index.ts";
-import { Session } from "https://deno.land/x/sacramentix_ory_client@v.1.1.39/index.ts";
 
-export async function guardOrySession(c:Context) {
+import { env } from "../env/index.ts";
+import type { Session } from "@ory/client-fetch";
+import { TRPCError } from "@trpc/server";
+import type { Context } from "hono";
+import { getCookie } from "hono/cookie";
+
+export async function guardOrySession(c:Context<any,any,{}>) {
     const ory_session_cookie = Object.entries(getCookie(c)??{}).find(([k,v])=>k.startsWith("ory_session"));
-    if (ory_session_cookie == null) throw new HTTPException(401, { message: "The user is not authenticated" });
-    const ory_session:Session = await fetch(env.ORY_BASE_PATH+"/sessions/whoami",{
-            headers: c.req.headers,
+    if (ory_session_cookie == null) throw new TRPCError({ code: "UNAUTHORIZED", message: "The user is not authenticated.", cause: "ory_session cookie missing." });
+    const ory_session = await fetch(env.ORY_BASE_PATH+"/sessions/whoami",{
+            headers: c.req.raw.headers,
         })
-        .then(r=>r.json())
-        .catch(e=>{throw new HTTPException(401, { message: "Could not validate the ory session" })});
+        .then(r=>r.json() as unknown as Session)
+        .catch(e=>{throw new TRPCError({ code: "UNAUTHORIZED", message: "Could not validate the session cookie.", cause: "ory_session cookie is invalid." })});
     const user:OryUser = {
-        id: ory_session.identity.id,
-        name: ory_session.identity.traits.username,
-        email: ory_session.identity.traits.email
+        id: ory_session.identity?.id ?? "",
+        name: ory_session.identity?.traits.username,
+        email: ory_session.identity?.traits.email
     };
     return { ory_session, user };
 }

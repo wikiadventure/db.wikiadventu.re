@@ -1,5 +1,4 @@
-import { type ZodError, z } from "https://deno.land/x/zod@v3.21.4/mod.ts";
-import "https://deno.land/std@0.192.0/dotenv/load.ts";
+import { type ZodError, z } from "zod";
 
 const envSchema = z.object({
     SURREAL_URL:        z.string().url(),
@@ -23,7 +22,7 @@ const envSchema = z.object({
 export const env = Object.freeze( 
 (() => {
     try {
-        return envSchema.parse(Deno.env.toObject());
+        return envSchema.parse(process.env);
     } catch(error) {
         const e = error as ZodError;
         console.error(
@@ -31,7 +30,7 @@ export const env = Object.freeze(
             e.errors.map(v=>` - ${v.path.join(".")} field ${v.message}`).join("\n"),
             "\nMake sure to fill the env with all the required fields."
         );
-        Deno.exit(1);
+        process.exit(1);
     }
 })());
 

@@ -1,13 +1,13 @@
-import { Hono, hc } from "https://deno.land/x/hono@v3.3.1/mod.ts";
-import { cors } from "https://deno.land/x/hono@v3.3.1/middleware.ts";
-import { z } from "https://esm.sh/zod@3.22.2";
-import { zValidator } from "https://esm.sh/@hono/zod-validator@0.1.8";
-import { serve } from "https://deno.land/std@0.182.0/http/server.ts";
+import { type Context, Hono } from "hono";
+import { cors } from "hono/cors";
 import { getAccount } from "./surreal/query/getAccountOrCreate/index.ts";
 import { getSixDegreeAccount, six_degree_achivements_id } from "./surreal/query/getAccountOrCreate/six_degree.ts";
 import { achieve } from "./surreal/query/achieve.ts";
 import { guardOrySession } from "./guard/orySession.ts";
+import { initTRPC } from "@trpc/server";
+import { z } from "zod";
 import { getLangFromHeaders } from "./utils/lang.ts";
+import { trpcServer } from "@hono/trpc-server";
 
 const app = new Hono();
 
@@ -18,27 +18,43 @@ app.use("/*", cors({
     credentials: true
 }));
 
+const t = initTRPC.context<Context>().create()
 
-const route =
-app
-.get('/get-account', async c => {   
-    const { user } = await guardOrySession(c);  
-    return c.jsonT(await getAccount(user));
-})
-.get('/get-account/six-degree', async c => {   
-    const { user } = await guardOrySession(c);
-    return c.jsonT(await getSixDegreeAccount(user, getLangFromHeaders(c.req)));
-})
-.post("/achieve/:achievement" , zValidator('param', z.object({
-    achievement: z.enum(six_degree_achivements_id)
-})) as any, async c => {
-    const { achievement } = await c.req.param();
-    const { user } = await guardOrySession(c);
-    return c.jsonT(await achieve(user, achievement));
+const publicProcedure = t.procedure
+const router = t.router
+
+
+export const AccountProcedure = t.procedure.use( async (opts) => {
+    opts.ctx
+    return opts.next({
+      ctx: {
+        ...(await guardOrySession(opts.ctx as Context))
+      },
+    });
 });
 
-const port = 9009;
-serve(app.fetch, { port: port});
+const trpcRouter = router({
+    account: AccountProcedure.query( async ({ ctx }) => {
+       return await getAccount(ctx.user);
+    }),
+    sixDegree: router({
+        account: AccountProcedure.query( async ({ ctx }) => {
+            return await getSixDegreeAccount(ctx.user, getLangFromHeaders(ctx.req));
+        }),
+    }),
+    achieve: AccountProcedure
+        .input( z.object({ achievement: z.enum(six_degree_achivements_id) }))
+        .query( async ({ ctx, input }) => {
+            return await achieve(ctx.user, input.achievement);
+    })
+});
 
-export type AppType = typeof route;
- 
+app.use('/*', trpcServer({router: trpcRouter}));
+
+const port = 9009;
+export default { 
+    port, 
+    fetch: app.fetch, 
+}
+
+export type Db_wikiadventu_re_trpc_router = typeof trpcRouter

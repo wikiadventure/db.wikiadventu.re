@@ -1,0 +1,7 @@
+.env
+/local
+/node_modules
+dockerfile
+fly.toml
+.vscode
+.github

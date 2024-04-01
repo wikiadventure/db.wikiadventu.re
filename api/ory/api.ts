@@ -1,7 +1,5 @@
-import { FrontendApi, IdentityApi } from "https://deno.land/x/sacramentix_ory_client@v.1.1.39/index.ts";
-import { createConfiguration } from "https://deno.land/x/sacramentix_ory_client@v.1.1.39/configuration.ts";
+import { Configuration, FrontendApi, IdentityApi } from "@ory/client-fetch";
 import { env } from "../env/index.ts";
-import { ServerConfiguration } from "https://deno.land/x/sacramentix_ory_client@v.1.1.39/servers.ts";
 
 // export const oryConfig = createConfiguration({
     
@@ -13,10 +11,11 @@ import { ServerConfiguration } from "https://deno.land/x/sacramentix_ory_client@
 //             }
 //         }
 //     },
-// });
+// });/
 
 // export const oryId = new IdentityApi(oryConfig);
 
-export const ory = new FrontendApi(createConfiguration({
-    baseServer: new ServerConfiguration(env.ORY_BASE_PATH,{})
+export const ory = new FrontendApi(new Configuration({
+    basePath: env.ORY_BASE_PATH
+    // baseServer: new ServerConfiguration(env.ORY_BASE_PATH,{})
 }));
