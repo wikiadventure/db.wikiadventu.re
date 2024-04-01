@@ -1,7 +1,7 @@
 import { decode } from "jsonwebtoken";
-import { HTTPException } from "hono/http-exception";
 import type { Context } from "hono";
 import { env } from "../env/index.ts";
+import { TRPCError } from "@trpc/server";
 
 const cryptoKey = await crypto.subtle.importKey("jwk",env.ORY_JWT, { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256'},false,["verify"]);
 
@@ -19,14 +19,14 @@ export type OryJwt = {
 
 export async function guardOryJwt(c:Context) {
     const bearer = c.req.header()["authorization"];
-    if (bearer == null) throw new HTTPException(401, { message: "There is no Authorization bearer header." });
+    if (bearer == null) throw new TRPCError({ code: "UNAUTHORIZED", message: "There is no Authorization bearer header." });
 
     const jwt = bearer.split("Bearer ")[1];
-    if (jwt == null) throw new HTTPException(401, { message: "There is no valid jwt in Authorization bearer header." });
+    if (jwt == null) throw new TRPCError({ code: "UNAUTHORIZED", message: "There is no valid jwt in Authorization bearer header." });
 
     return await verifyJwt(jwt, cryptoKey)
         .catch(e=>{
-            throw new HTTPException(401, { message: "The jwt provided in Authorization bearer header is invalid or expired." })
+            throw new TRPCError({ code: "UNAUTHORIZED", message: "The jwt provided in Authorization bearer header is invalid or expired." })
         }) as OryJwt;
 }
 
